@@ -1,11 +1,14 @@
 package main.java.dateformatterkr;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class DateFormatterKR {
 
@@ -83,5 +86,21 @@ public class DateFormatterKR {
             }
         }
         return "오늘";
+    }
+
+    /**
+     * Get a duration time format between the start and end date.
+     *
+     * @param startDate the start date
+     * @param endDate the end date
+     * @return a duration time format between the start and end date
+     */
+    public static String toDurationTimeFormat(LocalDate startDate, LocalDate endDate) {
+        final Duration duration = Duration.ofDays(DAYS.between(startDate, endDate));
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes() % 60;
+        long seconds = duration.getSeconds() % 60;
+
+        return String.format("%d시간 %d분 %d초", hours, minutes, seconds);
     }
 }

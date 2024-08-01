@@ -108,4 +108,13 @@ class DateFormatterKRTest {
             assertThat(actual).isEqualTo("1 년 후");
         }
 
+        @Test
+        void toDurationTimeFormat() {
+            final LocalDate startDate = LocalDate.of(2021, 1, 1);
+            final LocalDate endDate = LocalDate.of(2021, 1, 3);
+
+            final String actual = DateFormatterKR.toDurationTimeFormat(startDate, endDate);
+
+            assertThat(actual).isEqualTo("48시간 0분 0초");
+        }
 }

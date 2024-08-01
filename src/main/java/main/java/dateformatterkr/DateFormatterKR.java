@@ -7,6 +7,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.TextStyle;
+import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -25,7 +26,7 @@ public class DateFormatterKR {
      */
     public static String formatDate(LocalDate date, String pattern) {
         if (date == null || pattern == null) {
-            return null;
+            throw new IllegalArgumentException("Date and pattern must not be null");
         }
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         return date.format(formatter);
@@ -40,13 +41,13 @@ public class DateFormatterKR {
      */
     public static LocalDate parseDate(String dateString, String pattern) {
         if (dateString == null || pattern == null) {
-            return null;
+            throw new IllegalArgumentException("Date string and pattern must not be null");
         }
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         try {
             return LocalDate.parse(dateString, formatter);
         } catch (DateTimeParseException e) {
-            return null;
+            throw new IllegalArgumentException("Invalid date string: " + dateString, e);
         }
     }
 
@@ -59,7 +60,7 @@ public class DateFormatterKR {
      */
     public static List<LocalDate> getDatesInRange(LocalDate startDate, LocalDate endDate) {
         if (startDate == null || endDate == null) {
-            return null;
+            throw new IllegalArgumentException("Start and end date must not be null");
         }
 
         List<LocalDate> dates = new ArrayList<>();
@@ -79,7 +80,7 @@ public class DateFormatterKR {
      */
     public static String toRelativeTimeFormat(LocalDate startDate, LocalDate targetDate) {
         if (startDate == null || targetDate == null) {
-            return null;
+            throw new IllegalArgumentException("Start and target date must not be null");
         }
         Period period = Period.between(targetDate, startDate);
 
@@ -113,7 +114,7 @@ public class DateFormatterKR {
      */
     public static String toDurationTimeFormat(LocalDate startDate, LocalDate endDate) {
         if (startDate == null || endDate == null) {
-            return null;
+            throw new IllegalArgumentException("Start and end date must not be null");
         }
         final Duration duration = Duration.ofDays(DAYS.between(startDate, endDate));
         final long hours = duration.toHours();
@@ -132,10 +133,11 @@ public class DateFormatterKR {
      */
     public static String getDayOfWeek(LocalDate date, TextStyle textStyle) {
         if (date == null || textStyle == null) {
-            return null;
+            throw new IllegalArgumentException("Date and text style must not be null");
         }
 
         final DayOfWeek dayOfWeek = date.getDayOfWeek();
         return dayOfWeek.getDisplayName(textStyle, LOCALE_KOREAN);
     }
+
 }

@@ -27,4 +27,14 @@ class DateFormatterKRTest {
 
             assertThat(actual).isEqualTo(LocalDate.of(2021, 1, 1));
         }
+
+        @Test
+        void getDatesInRange() {
+            final LocalDate startDate = LocalDate.of(2021, 1, 1);
+            final LocalDate endDate = LocalDate.of(2021, 1, 3);
+
+            final var actual = DateFormatterKR.getDatesInRange(startDate, endDate);
+
+            assertThat(actual).containsExactly(startDate, LocalDate.of(2021, 1, 2), endDate);
+        }
 }

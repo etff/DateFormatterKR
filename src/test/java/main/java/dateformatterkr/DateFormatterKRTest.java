@@ -37,4 +37,75 @@ class DateFormatterKRTest {
 
             assertThat(actual).containsExactly(startDate, LocalDate.of(2021, 1, 2), endDate);
         }
+
+        @Test
+        void toRelativeTimeFormat_year_ago() {
+            final LocalDate startDate = LocalDate.of(2021, 1, 1);
+            final LocalDate targetDate = LocalDate.of(2022, 1, 1);
+
+            final String actual = DateFormatterKR.toRelativeTimeFormat(startDate, targetDate);
+
+            assertThat(actual).isEqualTo("1 년 전");
+        }
+
+        @Test
+        void toRelativeTimeFormat_month_ago() {
+            final LocalDate startDate = LocalDate.of(2021, 1, 1);
+            final LocalDate targetDate = LocalDate.of(2021, 2, 1);
+
+            final String actual = DateFormatterKR.toRelativeTimeFormat(startDate, targetDate);
+
+            assertThat(actual).isEqualTo("1 개월 전");
+        }
+
+        @Test
+        void toRelativeTimeFormat_day_ago() {
+            final LocalDate startDate = LocalDate.of(2021, 1, 1);
+            final LocalDate targetDate = LocalDate.of(2021, 1, 2);
+
+            final String actual = DateFormatterKR.toRelativeTimeFormat(startDate, targetDate);
+
+            assertThat(actual).isEqualTo("1 일 전");
+        }
+
+        @Test
+        void toRelativeTimeFormat_today() {
+            final LocalDate startDate = LocalDate.of(2021, 1, 1);
+            final LocalDate targetDate = LocalDate.of(2021, 1, 1);
+
+            final String actual = DateFormatterKR.toRelativeTimeFormat(startDate, targetDate);
+
+            assertThat(actual).isEqualTo("오늘");
+        }
+
+        @Test
+        void toRelativeTimeFormat_tomorrow() {
+            final LocalDate startDate = LocalDate.of(2021, 1, 2);
+            final LocalDate targetDate = LocalDate.of(2021, 1, 1);
+
+            final String actual = DateFormatterKR.toRelativeTimeFormat(startDate, targetDate);
+
+            assertThat(actual).isEqualTo("1 일 후");
+        }
+
+        @Test
+        void toRelativeTimeFormat_month_later() {
+            final LocalDate startDate = LocalDate.of(2021, 2, 1);
+            final LocalDate targetDate = LocalDate.of(2021, 1, 1);
+
+            final String actual = DateFormatterKR.toRelativeTimeFormat(startDate, targetDate);
+
+            assertThat(actual).isEqualTo("1 개월 후");
+        }
+
+        @Test
+        void toRelativeTimeFormat_year_later() {
+            final LocalDate startDate = LocalDate.of(2021, 1, 1);
+            final LocalDate targetDate = LocalDate.of(2020, 1, 1);
+
+            final String actual = DateFormatterKR.toRelativeTimeFormat(startDate, targetDate);
+
+            assertThat(actual).isEqualTo("1 년 후");
+        }
+
 }

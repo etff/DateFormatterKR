@@ -7,7 +7,6 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.TextStyle;
-import java.time.temporal.IsoFields;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -140,4 +139,23 @@ public class DateFormatterKR {
         return dayOfWeek.getDisplayName(textStyle, LOCALE_KOREAN);
     }
 
+    /**
+     * Check if the given date string is valid with the given pattern.
+     *
+     * @param dateString the date string
+     * @param pattern pattern (ex: "yyyy-MM-dd")
+     * @return true if the date string is valid, false otherwise
+     */
+    public static boolean isValidDate(String dateString, String pattern) {
+        if (dateString == null || pattern == null) {
+            return false;
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        try {
+            LocalDate.parse(dateString, formatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
 }

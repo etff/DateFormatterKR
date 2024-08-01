@@ -136,4 +136,14 @@ class DateFormatterKRTest {
 
         assertThat(actual).isEqualTo("금");
     }
+
+    @Test
+    void isValidatePattern() {
+        final String date = "2021-01-01";
+        final String pattern = "yyyy-MM-dd";
+
+        final boolean actual = DateFormatterKR.isValidDate(date, pattern);
+
+        assertThat(actual).isTrue();
+    }
 }

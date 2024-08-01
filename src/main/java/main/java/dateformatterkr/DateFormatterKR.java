@@ -1,16 +1,20 @@
 package main.java.dateformatterkr;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class DateFormatterKR {
+    private static final Locale LOCALE_KOREAN = Locale.KOREAN;
 
     /**
      * Format a date with a given pattern.
@@ -117,5 +121,21 @@ public class DateFormatterKR {
         final long seconds = duration.getSeconds() % 60;
 
         return String.format("%d시간 %d분 %d초", hours, minutes, seconds);
+    }
+
+    /**
+     * Get a day of week with a given date and text style.
+     *
+     * @param date the date
+     * @param textStyle the text style
+     * @return the day of week
+     */
+    public static String getDayOfWeek(LocalDate date, TextStyle textStyle) {
+        if (date == null || textStyle == null) {
+            return null;
+        }
+
+        final DayOfWeek dayOfWeek = date.getDayOfWeek();
+        return dayOfWeek.getDisplayName(textStyle, LOCALE_KOREAN);
     }
 }

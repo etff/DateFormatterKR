@@ -20,7 +20,10 @@ public class DateFormatterKR {
      * @return the formatted date
      */
     public static String formatDate(LocalDate date, String pattern) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        if (date == null || pattern == null) {
+            return null;
+        }
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         return date.format(formatter);
     }
 
@@ -32,11 +35,13 @@ public class DateFormatterKR {
      * @return the parsed date
      */
     public static LocalDate parseDate(String dateString, String pattern) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        if (dateString == null || pattern == null) {
+            return null;
+        }
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         try {
             return LocalDate.parse(dateString, formatter);
         } catch (DateTimeParseException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -49,6 +54,10 @@ public class DateFormatterKR {
      * @return a list of dates between the start and end date
      */
     public static List<LocalDate> getDatesInRange(LocalDate startDate, LocalDate endDate) {
+        if (startDate == null || endDate == null) {
+            return null;
+        }
+
         List<LocalDate> dates = new ArrayList<>();
         while (!startDate.isAfter(endDate)) {
             dates.add(startDate);
@@ -65,6 +74,9 @@ public class DateFormatterKR {
      * @return a relative time format between the start and target date
      */
     public static String toRelativeTimeFormat(LocalDate startDate, LocalDate targetDate) {
+        if (startDate == null || targetDate == null) {
+            return null;
+        }
         Period period = Period.between(targetDate, startDate);
 
         if (period.isNegative()) {
@@ -96,10 +108,13 @@ public class DateFormatterKR {
      * @return a duration time format between the start and end date
      */
     public static String toDurationTimeFormat(LocalDate startDate, LocalDate endDate) {
+        if (startDate == null || endDate == null) {
+            return null;
+        }
         final Duration duration = Duration.ofDays(DAYS.between(startDate, endDate));
-        long hours = duration.toHours();
-        long minutes = duration.toMinutes() % 60;
-        long seconds = duration.getSeconds() % 60;
+        final long hours = duration.toHours();
+        final long minutes = duration.toMinutes() % 60;
+        final long seconds = duration.getSeconds() % 60;
 
         return String.format("%d시간 %d분 %d초", hours, minutes, seconds);
     }

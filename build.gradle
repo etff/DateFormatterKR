@@ -2,7 +2,19 @@ plugins {
     id 'java'
 }
 
-group = 'dateformatterkr'
+apply plugin: 'maven-publish'
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'org.dateformatterkr'
+            artifactId = 'dateformatterkr'
+            version = '0.1.0'
+            from components.java
+        }
+    }
+}
+
+group = 'org.dateformatterkr'
 version = '1.0-SNAPSHOT'
 
 repositories {

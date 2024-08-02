@@ -1,4 +1,4 @@
-package main.java.dateformatterkr;
+package main.java.org.dateformatterkr;
 
 import java.time.DayOfWeek;
 import java.time.Duration;

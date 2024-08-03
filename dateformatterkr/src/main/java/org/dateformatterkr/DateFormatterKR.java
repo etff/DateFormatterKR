@@ -1,17 +1,17 @@
 package org.dateformatterkr;
 
 import java.time.DayOfWeek;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.format.TextStyle;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalQuery;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import static java.time.temporal.ChronoUnit.DAYS;
 
 public class DateFormatterKR {
     private static final Locale LOCALE_KOREAN = Locale.KOREAN;
@@ -23,12 +23,12 @@ public class DateFormatterKR {
      * @param pattern the pattern
      * @return the formatted date
      */
-    public static String formatDate(LocalDate date, String pattern) {
+    public static String formatDate(Temporal date, String pattern) {
         if (date == null || pattern == null) {
             throw new IllegalArgumentException("Date and pattern must not be null");
         }
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
-        return date.format(formatter);
+        return formatter.format(date);
     }
 
     /**
@@ -38,13 +38,13 @@ public class DateFormatterKR {
      * @param pattern the pattern
      * @return the parsed date
      */
-    public static LocalDate parseDate(String dateString, String pattern) {
+    public static <T extends Temporal> T parseDate(String dateString, String pattern, TemporalQuery<T> query) {
         if (dateString == null || pattern == null) {
             throw new IllegalArgumentException("Date string and pattern must not be null");
         }
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         try {
-            return LocalDate.parse(dateString, formatter);
+            return formatter.parse(dateString, query);
         } catch (DateTimeParseException e) {
             throw new IllegalArgumentException("Invalid date string: " + dateString, e);
         }
@@ -57,16 +57,19 @@ public class DateFormatterKR {
      * @param endDate the end date
      * @return a list of dates between the start and end date
      */
-    public static List<LocalDate> getDatesInRange(LocalDate startDate, LocalDate endDate) {
+    public static List<Temporal> getDatesInRange(Temporal startDate, Temporal endDate) {
         if (startDate == null || endDate == null) {
             throw new IllegalArgumentException("Start and end date must not be null");
         }
 
-        List<LocalDate> dates = new ArrayList<>();
-        while (!startDate.isAfter(endDate)) {
-            dates.add(startDate);
-            startDate = startDate.plusDays(1);
+        List<Temporal> dates = new ArrayList<>();
+        Temporal current = startDate;
+
+        while (ChronoUnit.DAYS.between(current, endDate) >= 0) {
+            dates.add(current);
+            current = current.plus(1, ChronoUnit.DAYS);
         }
+
         return dates;
     }
 
@@ -81,27 +84,26 @@ public class DateFormatterKR {
         if (startDate == null || targetDate == null) {
             throw new IllegalArgumentException("Start and target date must not be null");
         }
-        Period period = Period.between(targetDate, startDate);
 
-        if (period.isNegative()) {
-            period = period.negated();
-            if (period.getYears() > 0) {
-                return period.getYears() + " 년 전";
-            } else if (period.getMonths() > 0) {
-                return period.getMonths() + " 개월 전";
-            } else if (period.getDays() > 0) {
-                return period.getDays() + " 일 전";
-            }
+        long years = ChronoUnit.YEARS.between(targetDate, startDate);
+        long months = ChronoUnit.MONTHS.between(targetDate, startDate);
+        long days = ChronoUnit.DAYS.between(targetDate, startDate);
+
+        if (years > 0) {
+            return years + " 년 후";
+        } else if (years < 0) {
+            return (-years) + " 년 전";
+        } else if (months > 0) {
+            return months + " 개월 후";
+        } else if (months < 0) {
+            return (-months) + " 개월 전";
+        } else if (days > 0) {
+            return days + " 일 후";
+        } else if (days < 0) {
+            return (-days) + " 일 전";
         } else {
-            if (period.getYears() > 0) {
-                return period.getYears() + " 년 후";
-            } else if (period.getMonths() > 0) {
-                return period.getMonths() + " 개월 후";
-            } else if (period.getDays() > 0) {
-                return period.getDays() + " 일 후";
-            }
+            return "오늘";
         }
-        return "오늘";
     }
 
     /**
@@ -111,14 +113,16 @@ public class DateFormatterKR {
      * @param endDate the end date
      * @return a duration time format between the start and end date
      */
-    public static String toDurationTimeFormat(LocalDate startDate, LocalDate endDate) {
+    public static String toDurationTimeFormat(Temporal startDate, Temporal endDate) {
         if (startDate == null || endDate == null) {
             throw new IllegalArgumentException("Start and end date must not be null");
         }
-        final Duration duration = Duration.ofDays(DAYS.between(startDate, endDate));
-        final long hours = duration.toHours();
-        final long minutes = duration.toMinutes() % 60;
-        final long seconds = duration.getSeconds() % 60;
+
+        long totalDays = ChronoUnit.DAYS.between(startDate, endDate);
+        long totalSeconds = totalDays * 24 * 3600;
+        long hours = totalSeconds / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+        long seconds = totalSeconds % 60;
 
         return String.format("%d시간 %d분 %d초", hours, minutes, seconds);
     }
@@ -130,13 +134,14 @@ public class DateFormatterKR {
      * @param textStyle the text style
      * @return the day of week
      */
-    public static String getDayOfWeek(LocalDate date, TextStyle textStyle) {
+    public static String getDayOfWeek(Temporal date, TextStyle textStyle) {
         if (date == null || textStyle == null) {
             throw new IllegalArgumentException("Date and text style must not be null");
         }
 
-        final DayOfWeek dayOfWeek = date.getDayOfWeek();
-        return dayOfWeek.getDisplayName(textStyle, LOCALE_KOREAN);
+        int dayOfWeekValue = date.get(ChronoField.DAY_OF_WEEK);
+        DayOfWeek dayOfWeek = DayOfWeek.of(dayOfWeekValue);
+        return dayOfWeek.getDisplayName(textStyle, Locale.KOREAN);
     }
 
     /**
@@ -152,7 +157,7 @@ public class DateFormatterKR {
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         try {
-            LocalDate.parse(dateString, formatter);
+            formatter.parse(dateString);
             return true;
         } catch (DateTimeParseException e) {
             return false;

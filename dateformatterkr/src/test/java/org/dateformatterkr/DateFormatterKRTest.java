@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.format.TextStyle;
+import java.time.temporal.TemporalQuery;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,8 +24,9 @@ class DateFormatterKRTest {
     void parseDate() {
         final String pattern = "yyyy-MM-dd";
         final String dateString = "2021-01-01";
+        final TemporalQuery<LocalDate> dateType = LocalDate::from;
 
-        final LocalDate actual = DateFormatterKR.parseDate(dateString, pattern);
+        final LocalDate actual = DateFormatterKR.parseDate(dateString, pattern, dateType);
 
         assertThat(actual).isEqualTo(LocalDate.of(2021, 1, 1));
     }

@@ -4,6 +4,7 @@ import org.dateformatterkr.DateFormatterKR;
 
 import java.time.LocalDate;
 import java.time.format.TextStyle;
+import java.time.temporal.TemporalQuery;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,7 +17,8 @@ public class Main {
 
         // Output: String to LocalDate: Parsed date: 2021-01-01
         String dateString = "2021-01-01";
-        LocalDate parsedDate = DateFormatterKR.parseDate(dateString, pattern);
+        TemporalQuery<LocalDate> dateType = LocalDate::from;
+        LocalDate parsedDate = DateFormatterKR.parseDate(dateString, pattern, dateType);
         System.out.println("Parsed date: " + parsedDate);
 
         // Output: Dates in range:

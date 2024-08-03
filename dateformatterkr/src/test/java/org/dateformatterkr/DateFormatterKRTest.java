@@ -1,6 +1,5 @@
-package main.java.org.dateformatterkr;
+package org.dateformatterkr;
 
-import main.java.org.dateformatterkr.DateFormatterKR;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

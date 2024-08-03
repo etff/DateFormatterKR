@@ -1,2 +1,3 @@
-rootProject.name = 'DateFormmaterKR'
+rootProject.name = 'DateFormatterKR'
+include 'example', 'dateformatterkr'
 
